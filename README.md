@@ -37,4 +37,4 @@ Initial implementation is completed.
 
 ### out
 
-The source code here is bonk, do not try it.
+Initial implementation is completed.
