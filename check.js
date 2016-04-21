@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 "use strict"
 
 const exec = require("child_process").exec;
@@ -50,7 +51,7 @@ process.stdin.on("data", stdin => {
             
             const entry = entries[0];
             success({
-                version: entry["$"],
+                version: entry["$"], // {"revision": "1234"}
                 metadata: {
                     author: entry["author"][0],
                     date: entry["date"][0],
@@ -60,12 +61,6 @@ process.stdin.on("data", stdin => {
         });
     });
 });
-
-function toConcourseVersion(svnVersion) {
-    return {
-        "revision": svnVersion
-    };
-}
 
 function prettyJson(obj) {
     return JSON.stringify(obj, null, 2);
@@ -78,9 +73,7 @@ function fail(err) {
     }
 }
 
-function pass(result) {
+function success(result) {
     console.log(prettyJson(result));
     process.exit(0);
 }
-
-process.on("unhandledException", fail);
