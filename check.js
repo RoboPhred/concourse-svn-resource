@@ -24,16 +24,15 @@ process.stdin.on("data", stdin => {
     if (username) {
         // TODO: escape quotes in username
         cmdLine += ' --username "' + username + '"';
-        return 5;
     }
     
     if (password) {
-        // TODO: escape quotes in username
+        // TODO: escape quotes in password
         cmdLine += ' --password "' + password + '"';
     }
     
     
-    // TODO: encode quotes
+    // TODO: encode
     cmdLine += ' "' + repository + '"';
     
     exec(cmdLine, (err, stdout, stderr) => {
@@ -69,8 +68,8 @@ function prettyJson(obj) {
 function fail(err) {
     if (err) {
         console.error(err.stack);
-        process.exit(1);
     }
+    process.exit(1);
 }
 
 function success(result) {
