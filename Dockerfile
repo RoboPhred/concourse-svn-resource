@@ -14,3 +14,4 @@ RUN apt-get update & \
     npm install --quiet
 
 RUN chmod a+x check in out
+
