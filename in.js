@@ -22,15 +22,13 @@ process.stdin.on("data", stdin => {
     const repository = source.repository || null;
     const username = source.username || null;
     const password = source.password || null;
+    const trustCert = source["trust_server_cert"];
     
     if (!repository) {
         fail(new Error("source.repository must be provided"));
     }
     
     const targetVersion = data.version;
-    // if (typeof targetVersion === "undefined") {
-    //     fail(new Error("version must be provided"));
-    // }
     
     // svn checkout --username x --password x --no-auth-cache --xml
     let cmdLine = "svn checkout --non-interactive --no-auth-cache";
@@ -43,6 +41,10 @@ process.stdin.on("data", stdin => {
     if (password) {
         // TODO: make cmd line safe
         cmdLine += ' --password "' + password + '"';
+    }
+    
+    if (trustCert) {
+        cmdLine += ' --trust-server-cert';
     }
     
     if (targetVersion) {
