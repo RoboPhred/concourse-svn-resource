@@ -21,6 +21,13 @@ resources:
     password: {{password}}
 ```
 
+### Source options
+
+* `repository`: The subversion repository to operate on
+* `username`: *Optional.* The username to log in as.
+* `password`: *Optional.* The password to log in with.
+* `trust_server_cert`: *Optional.*: If true, trust invalid server ssl certs.
+ 
 More information on using custom resources can be found at the [concourse documentation](http://concourse.ci/configuring-resource-types.html)
 
 ## Current status
