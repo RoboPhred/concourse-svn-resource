@@ -4,6 +4,13 @@
 const exec = require("child_process").exec;
 const xml2js = require("xml2js");
 
+const shared = require("./shared");
+
+const success = shared.success;
+const fail = shared.fail;
+const hide = shared.hide;
+
+
 //node in.js /path
 if (process.argv.length < 3) {
     fail(new Error("destination directory must be specified"));
@@ -38,13 +45,15 @@ process.stdin.on("data", stdin => {
     let cmdLine = "svn checkout --non-interactive --no-auth-cache";
     
     if (username) {
-        // TODO: make cmd line safe
+        // TODO: escape quotes in username
         cmdLine += ' --username "' + username + '"';
     }
     
     if (password) {
-        // TODO: make cmd line safe
-        cmdLine += ' --password "' + password + '"';
+        // TODO: escape quotes in password
+        const passwdCmd = '--password "' + password + '"'; 
+        cmdLine += ' ' + passwdCmd;
+        hide(passwdCmd, '--password "*****"');
     }
     
     if (trustCert) {
@@ -85,17 +94,3 @@ process.stdin.on("data", stdin => {
         });
     });
 });
-
-function success(result) {
-    console.log(prettyJson(result));
-    process.exit(0);
-}
-
-function fail(err) {
-    console.error(err.stack);
-    process.exit(1);
-}
-
-function prettyJson(obj) {
-    return JSON.stringify(obj, null, 2);
-}

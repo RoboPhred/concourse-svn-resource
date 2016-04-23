@@ -4,6 +4,12 @@
 const exec = require("child_process").exec;
 const xml2js = require("xml2js");
 
+const shared = require("./shared");
+
+const success = shared.success;
+const fail = shared.fail;
+const hide = shared.hide;
+
 process.stdin.on("data", stdin => {
     const data = JSON.parse(stdin);
     
@@ -11,14 +17,13 @@ process.stdin.on("data", stdin => {
     const repository = source.repository || null;
     const username = source.username || null;
     const password = source.password || null;
-    
+
     if (!repository) {
         fail(new Error("source.repository must be provided"));
     }
     
     const targetVersion = data.version || null;
     
-    // svn log --username x --password x --no-auth-cache --limit 1 --xml
     let cmdLine = "svn log --non-interactive --no-auth-cache --limit 1 --xml";
     
     if (username) {
@@ -28,9 +33,10 @@ process.stdin.on("data", stdin => {
     
     if (password) {
         // TODO: escape quotes in password
-        cmdLine += ' --password "' + password + '"';
+        const passwdCmd = '--password "' + password + '"'; 
+        cmdLine += ' ' + passwdCmd;
+        hide(passwdCmd, '--password "*****"');
     }
-    
     
     // TODO: encode
     cmdLine += ' "' + repository + '"';
@@ -61,18 +67,3 @@ process.stdin.on("data", stdin => {
     });
 });
 
-function prettyJson(obj) {
-    return JSON.stringify(obj, null, 2);
-}
-
-function fail(err) {
-    if (err) {
-        console.error(err.stack);
-    }
-    process.exit(1);
-}
-
-function success(result) {
-    console.log(prettyJson(result));
-    process.exit(0);
-}
