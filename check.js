@@ -17,6 +17,7 @@ process.stdin.on("data", stdin => {
     const repository = source.repository || null;
     const username = source.username || null;
     const password = source.password || null;
+    const trustCert = source["trust_server_cert"];
 
     if (!repository) {
         fail(new Error("source.repository must be provided"));
@@ -36,6 +37,10 @@ process.stdin.on("data", stdin => {
         const passwdCmd = '--password "' + password + '"'; 
         cmdLine += ' ' + passwdCmd;
         hide(passwdCmd, '--password "*****"');
+    }
+    
+    if (trustCert) {
+        cmdLine += ' --trust-server-cert';
     }
     
     // TODO: encode
