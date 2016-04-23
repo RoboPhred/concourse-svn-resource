@@ -1,8 +1,9 @@
 "use strict"
 
-exports.prettyJson = function prettyJson(obj) {
+function prettyJson(obj) {
     return JSON.stringify(obj, null, 2);
 }
+exports.prettyJson = prettyJson;
 
 exports.fail = function fail(err) {
     if (err) {
