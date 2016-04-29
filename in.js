@@ -4,6 +4,8 @@
 const exec = require("child_process").exec;
 const xml2js = require("xml2js");
 
+const shared = require("./shared");
+
 const success = shared.success;
 const fail = shared.fail;
 const hide = shared.hide;
@@ -79,7 +81,7 @@ process.stdin.on("data", stdin => {
             fail(new Error('unexpected svn output.  expected revision, got "' + lines.slice(lines.length - 5).join("\n") + '"'));
         }
         
-        const rev = revLine.substr(header.length, revLine.length - header.length - 1);
+        const rev = revLine.substr(header.length, revLine.length - header.length - 2);
         success({
             "version": {
                 "revision": rev
