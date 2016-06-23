@@ -34,12 +34,11 @@ process.stdin.on("data", stdin => {
         fail(new Error("source.repository must be provided"));
     }
     
-    const revision = null;
+    let revision = null;
     if (typeof data.version === 'object' && data.version != null) {
-        const versionData = data.version;
-        const versionDataType = typeof data.version;
-        if (versionDataType === 'string' || versionDataType === 'number') {
-            revision = String(versionData);
+        const revisionType = typeof data.version.revision;
+        if (revisionType === 'string' || revisionType === 'number') {
+            revision = String(data.version.revision);
         }
     }
     
@@ -98,7 +97,7 @@ process.stdin.on("data", stdin => {
             "version": {
                 "revision": rev
             },
-            // TODO: Metadata.  This code is copied from check.  We may want to do a svn info 
+            // TODO: Metadata.  We may want to do an svn info to get this. 
             //  to fetch this.
             // metadata: {
             //     author: entry["author"][0],
