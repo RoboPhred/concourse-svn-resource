@@ -5,7 +5,10 @@ function prettyJson(obj) {
 }
 exports.prettyJson = prettyJson;
 
-exports.fail = function fail(err) {
+exports.fail = function fail(err, cmd) {
+    if (cmd) {
+        console.error('Error while executing command:', filter_hidden(cmd));
+    }
     if (err) {
         console.error(filter_hidden(err.stack));
     }

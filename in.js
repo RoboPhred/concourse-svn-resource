@@ -64,12 +64,16 @@ process.stdin.on("data", stdin => {
         // TODO: We can generate an incredible amount of output for large repos.
         //  Stream this and check each line as it passes.
         if (stderr && stderr !== "") {
-            fail(new Error(stderr));
+            fail(new Error(stderr), cmdLine);
+        }
+
+        if(err) {
+            fail(err, cmdLine);
         }
         
         const lines = stdout.split('\n');
         if (lines.length <= 1) {
-            fail(new Error("no output from svn checkout"));
+            fail(new Error("no output from svn checkout"), cmdLine);
         }
         
         // "Checked out revision 47830."
@@ -78,7 +82,7 @@ process.stdin.on("data", stdin => {
         const revLine = lines[lines.length - 2];
         const header = "Checked out revision ";
         if (revLine.substr(0, header.length) !== header) {
-            fail(new Error('unexpected svn output.  expected revision, got "' + lines.slice(lines.length - 5).join("\n") + '"'));
+            fail(new Error('unexpected svn output.  expected revision, got "' + lines.slice(lines.length - 5).join("\n") + '"'), cmdLine);
         }
         
         const rev = revLine.substr(header.length, revLine.length - header.length - 2);
