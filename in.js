@@ -97,7 +97,14 @@ process.stdin.on("data", stdin => {
         success({
             "version": {
                 "revision": rev
-            }
+            },
+            // TODO: Metadata.  This code is copied from check.  We may want to do a svn info 
+            //  to fetch this.
+            // metadata: {
+            //     author: entry["author"][0],
+            //     date: entry["date"][0],
+            //     msg: entry["msg"][0]
+            // }
         });
     });
 });

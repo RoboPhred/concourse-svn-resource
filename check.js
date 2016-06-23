@@ -62,11 +62,6 @@ process.stdin.on("data", stdin => {
             const entry = entries[0];
             success({
                 version: entry["$"], // {"revision": "1234"}
-                metadata: {
-                    author: entry["author"][0],
-                    date: entry["date"][0],
-                    msg: entry["msg"][0]
-                }
             });
         });
     });
