@@ -66,7 +66,7 @@ process.stdin.on("data", stdin => {
     }
     
     // TODO: urlencode
-    cmdLine += ' "' + repository + '"';
+    cmdLine += ' "' + repository + '" .';
     exec(cmdLine, {cwd: destDir}, (err, stdout, stderr) => {
         // TODO: We can generate an incredible amount of output for large repos.
         //  Stream this and check each line as it passes.
