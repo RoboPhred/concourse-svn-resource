@@ -66,7 +66,7 @@ process.stdin.on("data", stdin => {
             if (err) fail(err);
             
             const entries = info.logentry;
-            const versions = entries.map(x => x['$']);
+            const versions = entries.map(x => x['$']).sort((a, b) => Number(a.revision) - Number(b.revision));
 
             success(versions);
         });
