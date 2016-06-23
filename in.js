@@ -34,7 +34,14 @@ process.stdin.on("data", stdin => {
         fail(new Error("source.repository must be provided"));
     }
     
-    const targetVersion = data.version;
+    const revision = null;
+    if (typeof data.version === 'object' && data.version != null) {
+        const versionData = data.version;
+        const versionDataType = typeof data.version;
+        if (versionDataType === 'string' || versionDataType === 'number') {
+            revision = String(versionData);
+        }
+    }
     
     let cmdLine = "svn checkout --non-interactive --no-auth-cache";
     
@@ -54,8 +61,9 @@ process.stdin.on("data", stdin => {
         cmdLine += ' --trust-server-cert';
     }
     
-    if (targetVersion) {
-        cmdLine += ' -r "' + targetVersion.revision + '"';
+    if (revision) {
+        // TODO: Check targetVersion format.  Escape quotes
+        cmdLine += ' -r "' + revision + '"';
     }
     
     // TODO: urlencode
