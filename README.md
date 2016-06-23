@@ -14,7 +14,7 @@ resource_types:
 
 resources:
 - name: svn-code
-  type: pull-request
+  type: svn-resource
   source:
     repository: http://your-svn-repository
     username: {{username}}
