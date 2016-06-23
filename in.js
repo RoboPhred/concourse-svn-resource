@@ -98,7 +98,6 @@ process.stdin.on("data", stdin => {
                 "revision": rev
             },
             // TODO: Metadata.  We may want to do an svn info to get this. 
-            //  to fetch this.
             // metadata: {
             //     author: entry["author"][0],
             //     date: entry["date"][0],
