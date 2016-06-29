@@ -33,16 +33,4 @@ More information on using custom resources can be found at the [concourse docume
 
 ## Current status
 
-This resource is in regular use as input.  Output has not yet been tested.
-
-### check
-
-Initial implementation is completed.  However, it currently returns only the most recent revision.
-
-### in
-
-Initial implementation is completed.
-
-### out
-
-Initial implementation is completed.
+This resource is in regular use providing input.  Output / commit has not yet been tested.
