@@ -11,6 +11,7 @@ resource_types:
   type: docker-image
   source:
     repository: robophred/concourse-svn-resource
+    tag: alpha
 
 resources:
 - name: svn-code
@@ -32,7 +33,7 @@ More information on using custom resources can be found at the [concourse docume
 
 ## Current status
 
-*check* and *in* are implemeted, but neither has been tested on concourse as of yet.  Stay tuned for updates.
+This resource is in regular use as input.  Output has not yet been tested.
 
 ### check
 
