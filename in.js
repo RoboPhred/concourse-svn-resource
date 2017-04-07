@@ -92,7 +92,7 @@ process.stdin.on("data", stdin => {
             fail(new Error('unexpected svn output.  expected revision, got "' + lines.slice(lines.length - 5).join("\n") + '"'), cmdLine);
         }
         
-        const rev = revLine.substr(header.length, revLine.length - header.length - 2);
+        const rev = revLine.substr(header.length, revLine.length - header.length - 1);
         success({
             "version": {
                 "revision": rev
