@@ -23,9 +23,15 @@ process.stdin.on("data", stdin => {
         fail(new Error("source.repository must be provided"));
     }
     
-    const targetVersion = data.version || null;
+    let revision = null;
+    if (typeof data.version === 'object' && data.version != null) {
+        const revisionType = typeof data.version.revision;
+        if (revisionType === 'string' || revisionType === 'number') {
+            revision = String(data.version.revision);
+        }
+    }
     
-    let cmdLine = "svn log --non-interactive --no-auth-cache --limit 1 --xml";
+    let cmdLine = "svn log --non-interactive --no-auth-cache --xml";
     
     if (username) {
         // TODO: escape quotes in username
@@ -42,6 +48,11 @@ process.stdin.on("data", stdin => {
     if (trustCert) {
         cmdLine += ' --trust-server-cert';
     }
+
+    if (revision) {
+        // TODO: Check targetVersion format.  Escape quotes
+        cmdLine += ' -r ' + revision + ':HEAD';
+    }
     
     // TODO: encode
     cmdLine += ' "' + repository + '"';
@@ -55,19 +66,9 @@ process.stdin.on("data", stdin => {
             if (err) fail(err);
             
             const entries = info.logentry;
-            if (!entries || !entries[0]) {
-                success([]);
-            }
-            
-            const entry = entries[0];
-            success({
-                version: entry["$"], // {"revision": "1234"}
-                metadata: {
-                    author: entry["author"][0],
-                    date: entry["date"][0],
-                    msg: entry["msg"][0]
-                }
-            });
+            const versions = entries.map(x => x['$']).sort((a, b) => Number(a.revision) - Number(b.revision));
+
+            success(versions);
         });
     });
 });

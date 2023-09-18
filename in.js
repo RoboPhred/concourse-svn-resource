@@ -4,6 +4,8 @@
 const exec = require("child_process").exec;
 const xml2js = require("xml2js");
 
+const shared = require("./shared");
+
 const success = shared.success;
 const fail = shared.fail;
 const hide = shared.hide;
@@ -32,7 +34,13 @@ process.stdin.on("data", stdin => {
         fail(new Error("source.repository must be provided"));
     }
     
-    const targetVersion = data.version;
+    let revision = null;
+    if (typeof data.version === 'object' && data.version != null) {
+        const revisionType = typeof data.version.revision;
+        if (revisionType === 'string' || revisionType === 'number') {
+            revision = String(data.version.revision);
+        }
+    }
     
     let cmdLine = "svn checkout --non-interactive --no-auth-cache";
     
@@ -52,22 +60,27 @@ process.stdin.on("data", stdin => {
         cmdLine += ' --trust-server-cert';
     }
     
-    if (targetVersion) {
-        cmdLine += ' -r "' + targetVersion.revision + '"';
+    if (revision) {
+        // TODO: Check targetVersion format.  Escape quotes
+        cmdLine += ' -r "' + revision + '"';
     }
     
     // TODO: urlencode
-    cmdLine += ' "' + repository + '"';
+    cmdLine += ' "' + repository + '" .';
     exec(cmdLine, {cwd: destDir}, (err, stdout, stderr) => {
         // TODO: We can generate an incredible amount of output for large repos.
         //  Stream this and check each line as it passes.
         if (stderr && stderr !== "") {
-            fail(new Error(stderr));
+            fail(new Error(stderr), cmdLine);
+        }
+
+        if(err) {
+            fail(err, cmdLine);
         }
         
         const lines = stdout.split('\n');
         if (lines.length <= 1) {
-            fail(new Error("no output from svn checkout"));
+            fail(new Error("no output from svn checkout"), cmdLine);
         }
         
         // "Checked out revision 47830."
@@ -76,14 +89,20 @@ process.stdin.on("data", stdin => {
         const revLine = lines[lines.length - 2];
         const header = "Checked out revision ";
         if (revLine.substr(0, header.length) !== header) {
-            fail(new Error('unexpected svn output.  expected revision, got "' + lines.slice(lines.length - 5).join("\n") + '"'));
+            fail(new Error('unexpected svn output.  expected revision, got "' + lines.slice(lines.length - 5).join("\n") + '"'), cmdLine);
         }
         
-        const rev = revLine.substr(header.length, revLine.length - header.length - 1);
+        const rev = revLine.substr(header.length, revLine.length - header.length - 2);
         success({
             "version": {
                 "revision": rev
-            }
+            },
+            // TODO: Metadata.  We may want to do an svn info to get this. 
+            // metadata: {
+            //     author: entry["author"][0],
+            //     date: entry["date"][0],
+            //     msg: entry["msg"][0]
+            // }
         });
     });
 });

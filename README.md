@@ -11,10 +11,11 @@ resource_types:
   type: docker-image
   source:
     repository: robophred/concourse-svn-resource
+    tag: alpha
 
 resources:
 - name: svn-code
-  type: pull-request
+  type: svn-resource
   source:
     repository: http://your-svn-repository
     username: {{username}}
@@ -26,22 +27,10 @@ resources:
 * `repository`: The subversion repository to operate on
 * `username`: *Optional.* The username to log in as.
 * `password`: *Optional.* The password to log in with.
-* `trust_server_cert`: *Optional.*: If true, trust invalid server ssl certs.
+* `trust_server_cert`: *Optional.* If true, trust invalid server ssl certs.
  
 More information on using custom resources can be found at the [concourse documentation](http://concourse.ci/configuring-resource-types.html)
 
 ## Current status
 
-*check* and *in* are implemeted, but neither has been tested on concourse as of yet.  Stay tuned for updates.
-
-### check
-
-Initial implementation is completed.  However, it currently returns only the most recent revision.
-
-### in
-
-Initial implementation is completed.
-
-### out
-
-Initial implementation is completed.
+This resource is in regular use providing input.  Output / commit has not yet been tested.
