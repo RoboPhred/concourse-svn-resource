@@ -1,5 +1,4 @@
 FROM node:5
-MAINTAINER "William Matthews" robophred@gmail.com
 
 WORKDIR /opt/resource
 COPY check.js check
