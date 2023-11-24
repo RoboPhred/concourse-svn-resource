@@ -67,7 +67,16 @@ process.stdin.on("data", stdin => {
     
     // TODO: urlencode
     cmdLine += ' "' + repository + '" .';
-    exec(cmdLine, {cwd: destDir}, (err, stdout, stderr) => {
+    let options = {
+	cwd: destDir,
+	maxBuffer: 8192*1024,
+	env: {
+	    LANG: "en_US.UTF-8",
+	    LANGUAGE: "en_US:en",
+	    LC_ALL: "en_US.UTF-8"
+	}
+    };
+    exec(cmdLine, options, (err, stdout, stderr) => {
         // TODO: We can generate an incredible amount of output for large repos.
         //  Stream this and check each line as it passes.
         if (stderr && stderr !== "") {
@@ -92,7 +101,7 @@ process.stdin.on("data", stdin => {
             fail(new Error('unexpected svn output.  expected revision, got "' + lines.slice(lines.length - 5).join("\n") + '"'), cmdLine);
         }
         
-        const rev = revLine.substr(header.length, revLine.length - header.length - 2);
+        const rev = revLine.substr(header.length, revLine.length - header.length - 1);
         success({
             "version": {
                 "revision": rev
